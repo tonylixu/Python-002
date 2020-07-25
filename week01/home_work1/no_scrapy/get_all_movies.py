@@ -1,4 +1,9 @@
-"""This Python script retrieve HTML information from given site and parse it"""
+"""This Python script retrieve HTML information from given site and parse it
+
+To Run:
+    $ python get_all_movies.py --test=yes|no
+
+"""
 import requests
 from bs4 import BeautifulSoup as bs
 from time import sleep
@@ -21,7 +26,7 @@ def prepare_header() -> dict:
     return _headers
 
 
-def parse_response(_bs_info: bs, _total_movies: int, _session: requests.Session):
+def parse_response(_bs_info: bs, _total_movies: int, _session: requests.Session) -> list:
     _counter, _movies = 0, []
     for tags in _bs_info.find_all('div', attrs={'class': 'channel-detail movie-item-title'}):
         if _counter < _total_movies:
@@ -36,7 +41,7 @@ def parse_response(_bs_info: bs, _total_movies: int, _session: requests.Session)
     return _movies
 
 
-def process_single_movie(_movie_url, _session):
+def process_single_movie(_movie_url, _session) -> tuple:
     if TEST == 'no':
         _response = _session.get(_movie_url, headers=header)
         _selector = etree.HTML(response.text.replace("<dd>", "</dd><dd>"))
