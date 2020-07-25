@@ -7,5 +7,11 @@
 
 
 class MaoyanmoviePipeline:
+    """
+        Scrapy pipeline to process data and output to csv file
+    """
     def process_item(self, item, spider):
+        movies = [item['title'], item['type'], item['release_date']]
+        with open('./movie.csv', 'a+') as file_writer:
+            file_writer.write(','.join(movies) + '\n')
         return item

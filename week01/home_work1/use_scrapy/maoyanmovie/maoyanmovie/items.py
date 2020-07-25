@@ -9,6 +9,9 @@ import scrapy
 
 
 class MaoyanmovieItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    """
+        Define movie item fields
+    """
+    title = scrapy.Field()
+    release_date = scrapy.Field()
+    type = scrapy.Field()
