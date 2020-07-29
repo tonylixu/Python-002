@@ -11,8 +11,8 @@ import yaml
 
 class MaoyanmoviePipeline:
     def process_item(self, item, spider):
-        #self.save_to_db(item, spider)
-        self.save_to_csv(item, spider)
+        self.save_to_db(item, spider)
+        #self.save_to_csv(item, spider)
         return item
 
     @staticmethod

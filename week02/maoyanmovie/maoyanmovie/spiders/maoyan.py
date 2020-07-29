@@ -20,7 +20,7 @@ class MaoyanSpider(scrapy.Spider):
         counter = 0
         for movie in movies:
             # Only interested in the first 10 movies
-            if counter < 1:
+            if counter < 10:
                 item = MaoyanmovieItem()
                 movie_url = url_prefix + movie.xpath('./a/@href').extract_first().strip()
                 item['url'] = movie_url
