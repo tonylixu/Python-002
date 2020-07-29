@@ -1,0 +1,6 @@
+database_settings:
+  DATABASE_HOST: '127.0.0.1'
+  DATABASE_PORT: 3306
+  DATABASE_NAME: 'maoyan'
+  DATABASE_USER: 'root'
+  DATABASE_PASSWORD: 'root'
