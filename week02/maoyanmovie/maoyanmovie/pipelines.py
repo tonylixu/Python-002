@@ -11,7 +11,9 @@ import yaml
 
 class MaoyanmoviePipeline:
     def process_item(self, item, spider):
-        self.save_to_db(item, spider)
+        #self.save_to_db(item, spider)
+        self.save_to_csv(item, spider)
+        return item
 
     @staticmethod
     def open_db_yaml_file(file_name: str='db_settings.yml') -> dict:
@@ -30,6 +32,7 @@ class MaoyanmoviePipeline:
         db_connection = db.create_db_connection()
         movie = (item['title'], item['url'], item['release_date'], item['type'])
         db.insert_movie(db_connection, movie)
+        return item
 
     def save_to_csv(self, item, spider):
         print("Save item to csv")
