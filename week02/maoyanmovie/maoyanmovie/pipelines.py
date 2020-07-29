@@ -11,13 +11,7 @@ import yaml
 
 class MaoyanmoviePipeline:
     def process_item(self, item, spider):
-        db_info = MaoyanmoviePipeline.open_db_yaml_file()
-        sqls = ['select 1', 'select VERSION()']
-        result = []
-        db = DBConnector.DBConnector(db_info, sqls)
-        db.run(result)
-        print(result)
-        return self.save_to_csv(item, spider)
+        self.save_to_db(item, spider)
 
     @staticmethod
     def open_db_yaml_file(file_name: str='db_settings.yml') -> dict:
@@ -29,6 +23,13 @@ class MaoyanmoviePipeline:
         with open(file_name, 'r') as file_reader:
             yaml_content = yaml.load(file_reader, Loader=yaml.FullLoader)
         return yaml_content['database_settings']
+
+    def save_to_db(self, item, spider):
+        db_info = MaoyanmoviePipeline.open_db_yaml_file()
+        db = DBConnector.DBConnector(db_info)
+        db_connection = db.create_db_connection()
+        movie = (item['title'], item['url'], item['release_date'], item['type'])
+        db.insert_movie(db_connection, movie)
 
     def save_to_csv(self, item, spider):
         print("Save item to csv")

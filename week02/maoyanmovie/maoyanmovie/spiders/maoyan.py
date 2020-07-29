@@ -17,7 +17,6 @@ class MaoyanSpider(scrapy.Spider):
             return
         url_prefix = 'https://maoyan.com'
         movies = Selector(response=response).xpath('//div[@class="channel-detail movie-item-title"]')
-        print(movies)
         counter = 0
         for movie in movies:
             # Only interested in the first 10 movies
