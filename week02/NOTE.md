@@ -29,4 +29,6 @@ HTTP_PROXY_LIST = [
 ```
   * 第二步: 编写自己的Middleware, 并且写入"middlewares.py"文件， 这样在爬虫启动的时候就会自己调用
   
- 
+### WebDriver
+* 针对页面被Java Script加密的情况，或者是页面获取不到我们想要去请求的URL的情况。
+* 让Python去模拟浏览器点击的行为 (比如填写用户名和密码)
