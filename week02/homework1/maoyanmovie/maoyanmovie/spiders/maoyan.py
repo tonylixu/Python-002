@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from scrapy.utils.project import get_project_settings
 from scrapy.selector import Selector
 from maoyanmovie.items import MaoyanmovieItem
 
+# Check proxy IPs
 TEST = False
 
 
@@ -11,28 +13,33 @@ class MaoyanSpider(scrapy.Spider):
     allowed_domains = ['maoyan.com', 'httpbin.org']
     start_urls = ['http://httpbin.org/ip'] if TEST else ['https://maoyan.com/films?showType=3']
 
-    def parse(self, response):
-        if TEST:
-            print(response.text)
-            return
-        url_prefix = 'https://maoyan.com'
-        movies = Selector(response=response).xpath('//div[@class="channel-detail movie-item-title"]')
-        counter = 0
-        for movie in movies:
-            # Only interested in the first 10 movies
-            if counter < 10:
-                item = MaoyanmovieItem()
-                movie_url = url_prefix + movie.xpath('./a/@href').extract_first().strip()
-                item['url'] = movie_url
-                yield scrapy.Request(url=movie_url, meta={'item': item}, callback=self.parse_single_movie)
-            counter += 1
+    def start_requests(self):
+        """Override the start_requests method of
+        the spider to make it carry cookies
+        """
+        settings = get_project_settings()
+        cookies = settings.get('COOKIES')
+        for url in self.start_urls:
+            yield scrapy.Request(url=url, cookies=cookies, callback=self.parse)
 
-    def parse_single_movie(self, response):
+    def parse(self, response):
+        """Get movie details directly from the landing page"""
+        url_prefix = 'https://maoyan.com'
+        movies = Selector(response=response).xpath('//div[@class="movie-item film-channel"]')
+        for movie in movies[:10]:
+            item = MaoyanmovieItem()
+            url = url_prefix + movie.xpath('./a/@href').extract()[0]
+            item['movie_url'] = url
+            print(item['movie_url'])
+            yield scrapy.Request(url=url, meta={'item': item}, callback=self.parse_single_movie)
+
+    @staticmethod
+    def parse_single_movie(response):
         item = response.meta['item']
-        movie_title = Selector(response=response).xpath('/html/body/div[3]/div/div[2]/div[1]/h1/text()')
-        movie_type = Selector(response=response).xpath('/html/body/div[3]/div/div[2]/div[1]/ul/li[1]/a[1]/text()')
-        movie_release_date = Selector(response=response).xpath('/html/body/div[3]/div/div[2]/div[1]/ul/li[3]/text()')
-        item['title'] = movie_title.extract_first().strip()
-        item['release_date'] = movie_release_date.extract_first().strip()
-        item['type'] = movie_type.extract_first().strip()
-        yield item
+        movie_details = Selector(response=response).xpath('//div[@class="movie-brief-container"]')
+        for detail in movie_details:
+            item['movie_title'] = detail.xpath('./h1/text()').extract_first().strip()
+            item['movie_release_date'] = detail.xpath('./ul/li[3]/text()').extract_first().strip()[:10]
+            movie_type = [str(t.extract()).strip() for t in detail_.xpath('./ul/li[1]/a/text()')]
+            item['movie_type'] = '/'.join(movie_type)
+            yield item

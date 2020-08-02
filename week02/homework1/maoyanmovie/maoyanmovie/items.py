@@ -10,7 +10,7 @@ import scrapy
 
 class MaoyanmovieItem(scrapy.Item):
     # Define tile, url release_date and type for movie
-    title = scrapy.Field()
-    url = scrapy.Field()
-    release_date = scrapy.Field()
-    type = scrapy.Field()
+    movie_title = scrapy.Field()
+    movie_url = scrapy.Field()
+    movie_release_date = scrapy.Field()
+    movie_type = scrapy.Field()

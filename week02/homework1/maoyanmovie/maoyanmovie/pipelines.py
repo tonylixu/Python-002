@@ -6,7 +6,7 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import pandas as pd
 from .utilities import DBConnector
-import yaml
+from scrapy.utils.project import get_project_settings
 
 
 class MaoyanmoviePipeline:
@@ -16,27 +16,33 @@ class MaoyanmoviePipeline:
         return item
 
     @staticmethod
-    def open_db_yaml_file(file_name: str='db_settings.yml') -> dict:
+    def get_db_settings() -> dict:
         """Open DB config yaml for read
 
         :param file_name: DB config file name, default db_settings.yml
         :return: db_info dictionary
         """
-        with open(file_name, 'r') as file_reader:
-            yaml_content = yaml.load(file_reader, Loader=yaml.FullLoader)
-        return yaml_content['database_settings']
+        db_info = {}
+        settings = get_project_settings()
+        db_info['DATABASE_HOST'] = settings.get('DATABASE_HOST')
+        db_info['DATABASE_PORT'] = settings.get('DATABASE_PORT')
+        db_info['DATABASE_USER'] = settings.get('DATABASE_USER')
+        db_info['DATABASE_PASSWORD'] = settings.get('DATABASE_PASSWORD')
+        return db_info
 
     def save_to_db(self, item, spider):
-        db_info = MaoyanmoviePipeline.open_db_yaml_file()
+        db_info = MaoyanmoviePipeline.get_db_settings()
         db = DBConnector.DBConnector(db_info)
-        db_connection = db.create_db_connection()
-        movie = (item['title'], item['url'], item['release_date'], item['type'])
-        db.insert_movie(db_connection, movie)
+        database_name = 'maoyan'
+        db.create_database_utf8(database_name)
+        db.create_movies_table(database_name)
+        movie = (item['movie_title'], item['movie_url'], item['movie_release_date'], item['movie_type'])
+        db.insert_movie(database_name, movie)
         return item
 
     def save_to_csv(self, item, spider):
         print("Save item to csv")
-        movies = [item['title'], item['url'], item['type'], item['release_date']]
+        movies = [item['movie_title'], item['movie_url'], item['movie_type'], item['movie_release_date']]
         movies_pd = pd.DataFrame(data=movies)
         movies_pd.to_csv('./movie.csv', mode='a+', encoding='utf-8', index=False, header=False)
         return item
