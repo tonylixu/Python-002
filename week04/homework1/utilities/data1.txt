@@ -1,0 +1,9 @@
+INSERT into `data1` (`id`, `order_id`, `cost`) VALUES ('CA001', 'AUT001', 34.2);
+INSERT into `data1` (`id`, `order_id`, `cost`) VALUES ('CA001', 'AUT002', 44.2);
+INSERT into `data1` (`id`, `order_id`, `cost`) VALUES ('CA002', 'AUT003', 54.2);
+INSERT into `data1` (`id`, `order_id`, `cost`) VALUES ('CA002', 'AUT004', 64.2);
+INSERT into `data1` (`id`, `order_id`, `cost`) VALUES ('CA003', 'AUT005', 74.2);
+INSERT into `data1` (`id`, `order_id`, `cost`) VALUES ('CA003', 'AUT006', 84.2);
+INSERT into `data1` (`id`, `order_id`, `cost`) VALUES ('CA004', 'AUT007', 94.2);
+INSERT into `data1` (`id`, `order_id`, `cost`) VALUES ('CA004', 'AUT008', 104.2);
+INSERT into `data1` (`id`, `order_id`, `cost`) VALUES ('CA005', 'AUT009', 314.2);

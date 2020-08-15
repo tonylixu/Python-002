@@ -1,0 +1,5 @@
+INSERT into `data2` (`id`, `order_id`, `name`) VALUES ('CA001', 'AUT001', 'Addidas');
+INSERT into `data2` (`id`, `order_id`, `name`) VALUES ('CA001', 'AUT002', 'Nike');
+INSERT into `data2` (`id`, `order_id`, `name`) VALUES ('CA002', 'AUT003', 'Addidas');
+INSERT into `data2` (`id`, `order_id`, `name`) VALUES ('CA012', 'AUT004', 'Nike');
+INSERT into `data2` (`id`, `order_id`, `name`) VALUES ('CA010', 'AUT005', 'Puma');
